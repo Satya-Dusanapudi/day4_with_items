@@ -1,0 +1,20 @@
+- name: Create users with specific shells
+  hosts: web
+  become: true
+
+  vars:
+    users_list:
+      - name: satya
+        shell: /bin/bash
+      - name: lakshmi
+        shell: /bin/sh
+      - name: devops
+        shell: /bin/zsh
+
+  tasks:
+    - name: Ensure users exist with correct shells
+      user:
+        name: "{{ item.name }}"
+        shell: "{{ item.shell }}"
+        state: present
+      loop: "{{ users_list }}"
