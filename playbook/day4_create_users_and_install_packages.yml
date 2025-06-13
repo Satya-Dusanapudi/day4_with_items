@@ -1,0 +1,27 @@
+---
+- name: Create users and install packages
+  hosts: web
+  become: true
+
+  vars:
+    users:
+      - ram
+      - sita
+    packages:
+      - tree
+      - git
+      - htop
+
+  tasks:
+    - name: Create users
+      user:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ users }}"
+
+    - name: Install multiple packages
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop: "{{ packages }}"

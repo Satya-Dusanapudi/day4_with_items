@@ -1,0 +1,23 @@
+---
+- name: Install packages and create users using with_items
+  hosts: web
+  become: true
+
+  tasks:
+    - name: Install useful packages
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - git
+        - curl
+        - htop
+
+    - name: Create users
+      user:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - ansibleuser1
+        - ansibleuser2
