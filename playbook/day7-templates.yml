@@ -1,0 +1,26 @@
+---
+- name: Ansible Day 7 - Templates with Variables
+  hosts: all
+  become: yes
+  vars:
+    nginx_port: 8080
+    welcome_message: "Hello Satya from {{ ansible_hostname }}"
+
+  tasks:
+    - name: Install NGINX
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Deploy custom NGINX config with variables
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: Restart NGINX
+
+  handlers:
+    - name: Restart NGINX
+      service:
+        name: nginx
+        state: restarted

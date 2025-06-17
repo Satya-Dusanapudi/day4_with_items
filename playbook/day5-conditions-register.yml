@@ -1,0 +1,25 @@
+---
+- name: Ansible Day 5 - Conditionals and Register
+  hosts: all
+  become: yes
+  tasks:
+    - name: Check if /etc/hosts file exists
+      stat:
+        path: /etc/hosts
+      register: hosts_file_status
+
+    - name: Print message if /etc/hosts exists
+      debug:
+        msg: "/etc/hosts file is present."
+      when: hosts_file_status.stat.exists
+
+    - name: Print message if /etc/hosts does not exist
+      debug:
+        msg: "/etc/hosts file is NOT present."
+      when: not hosts_file_status.stat.exists
+
+    - name: Create dummy file if OS is Ubuntu or RedHat
+      file:
+        path: /tmp/ansible_day5.txt
+        state: touch
+      when: ansible_facts['os_family'] == "Debian" or ansible_facts['os_family'] == "RedHat"
