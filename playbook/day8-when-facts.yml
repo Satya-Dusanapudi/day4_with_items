@@ -1,0 +1,22 @@
+---
+- name: Ansible Day 8 - Conditionals with Facts
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install Apache only on RedHat
+      yum:
+        name: httpd
+        state: present
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install NGINX only on Debian/Ubuntu
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Display a custom message based on hostname
+      debug:
+        msg: "Hello from {{ ansible_facts['hostname'] }}!"
